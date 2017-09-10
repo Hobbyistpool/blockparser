@@ -143,6 +143,12 @@ static double getMem() {
     static const uint32_t gExpectedMagic = 0x03b5d503;
 #endif
 
+#if defined BEECOIN
+    static const size_t gHeaderSize = 80;
+    static auto kCoinDirName = ".beecoinv2";
+    static const uint32_t gExpectedMagic = 0x70352205;
+#endif
+
 #define DO(x) x
     static inline void   startBlock(const uint8_t *p)                      { DO(gCallback->startBlock(p));         }
     static inline void     endBlock(const uint8_t *p)                      { DO(gCallback->endBlock(p));           }
@@ -405,7 +411,7 @@ static void parseTX(
             SKIP(uint32_t, nVersion, p);
         #endif
 
-        #if defined(PEERCOIN) || defined(CLAM) || defined(JUMBUCKS) || defined(PAYCON)
+        #if defined(PEERCOIN) || defined(CLAM) || defined(JUMBUCKS) || defined(PAYCON) || defined(BEECOIN)
             SKIP(uint32_t, nTime, p);
         #endif
 
@@ -474,7 +480,7 @@ static bool parseBlock(
                 }
             endTXs(p);
 
-            #if defined(PEERCOIN) || defined(CLAM) || defined(JUMBUCKS) || defined(PAYCON)
+            #if defined(PEERCOIN) || defined(CLAM) || defined(JUMBUCKS) || defined(PAYCON) || defined(BEECOIN)
                 LOAD_VARINT(vchBlockSigSize, p);
                 p += vchBlockSigSize;
             #endif
@@ -735,6 +741,8 @@ static void getBlockHeader(
             scrypt(hash, p, gHeaderSize);
         }
     #elif defined(JUMBUCKS)
+        scrypt(hash, p, gHeaderSize);
+    #elif defined(BEECOIN)
         scrypt(hash, p, gHeaderSize);
     #else
         sha256Twice(hash, p, gHeaderSize);
