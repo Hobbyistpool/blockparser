@@ -143,6 +143,15 @@ static double getMem() {
     static const uint32_t gExpectedMagic = 0x03b5d503;
 #endif
 
++#if defined NEWYORKCOIN
++    static const size_t gHeaderSize = 80;
++    static auto kCoinDirName = ".newyorkc";
++    static const uint32_t gExpectedMagic = 0xc0c0c0c0;
++#endif
++
+
+
+
 #define DO(x) x
     static inline void   startBlock(const uint8_t *p)                      { DO(gCallback->startBlock(p));         }
     static inline void     endBlock(const uint8_t *p)                      { DO(gCallback->endBlock(p));           }
@@ -405,7 +414,7 @@ static void parseTX(
             SKIP(uint32_t, nVersion, p);
         #endif
 
-        #if defined(PEERCOIN) || defined(CLAM) || defined(JUMBUCKS) || defined(PAYCON)
+        #if defined(PEERCOIN) || defined(CLAM) || defined(JUMBUCKS) || defined(PAYCON) || defined(NEWYORKCOIN)
             SKIP(uint32_t, nTime, p);
         #endif
 
@@ -474,7 +483,7 @@ static bool parseBlock(
                 }
             endTXs(p);
 
-            #if defined(PEERCOIN) || defined(CLAM) || defined(JUMBUCKS) || defined(PAYCON)
+            #if defined(PEERCOIN) || defined(CLAM) || defined(JUMBUCKS) || defined(PAYCON) || defined(NEWYORKCOIN)
                 LOAD_VARINT(vchBlockSigSize, p);
                 p += vchBlockSigSize;
             #endif
@@ -736,7 +745,9 @@ static void getBlockHeader(
         }
     #elif defined(JUMBUCKS)
         scrypt(hash, p, gHeaderSize);
-    #else
+    #elif defined(NEWYORKCOIN)
+        scrypt(hash, p, gHeaderSize);
+		#else
         sha256Twice(hash, p, gHeaderSize);
     #endif
 

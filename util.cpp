@@ -586,11 +586,15 @@ static int getCoinType() {
         #if defined(MYRIADCOIN)
             50
         #endif
-                
+
         #if defined(UNOBTANIUM)
             130
         #endif
-    ;
+
+        #if defined(NEWYORKCOIN)
+            60
+        #endif
+		;
 }
 
 bool addrToHash160(
@@ -1023,6 +1027,9 @@ const char *getInterestingAddr() {
     #elif defined(UNOBTANIUM)
 
         "udicetdXSo6Zc7vhWgAZfz4XrwagAX34RK"
+    #elif defined(NEWYORKCOIN)
+
+        "RXDXVzfB7sEThmtLqpzS8QnKzc6MT4rDQa"
 
     #else
 
@@ -1065,7 +1072,7 @@ const char *getInterestingAddr() {
 
 #endif
 
-#if defined(CLAM) || defined(JUMBUCKS)
+#if defined(CLAM) || defined(JUMBUCKS)|| defined(NEWYORKCOIN)
 
     #include <scrypt/scrypt.h>
 
